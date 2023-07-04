@@ -3,10 +3,10 @@ import { v4 as uuidv4, validate } from 'uuid';
 export class Users {
 
   constructor(
-    public id: string,
     public username: string, 
     public age: number, 
-    public hobbies: string[]
+    public hobbies: string[],
+    public id?: string,
   ){}
 
   private static _users: Users[] = [
@@ -51,7 +51,6 @@ export class Users {
   }
 
   static createUser(user: Users) {
-    //TODO Проверить что есть все обязательные поля
     this._users.push(user)
   }
 
