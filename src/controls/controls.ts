@@ -9,12 +9,12 @@ export const handleRequest: RequestListener = (req, res)=> {
   const { url, method } = req
   res.setHeader('Content-type', 'application/json')
   const urlParts = url?.split('/')
-  if(url?.startsWith('/users') && !urlParts?.[2] && method === HttpMethod.GET) {
+  if (url?.startsWith('/users') && !urlParts?.[2] && method === HttpMethod.GET) {
     const users = Users.getUsers()
     res.statusCode = 200
     res.write(JSON.stringify(users))
     res.end()
-  } else if(url?.startsWith('/users/') &&  method === HttpMethod.GET) {
+  } else if (url?.startsWith('/users/') && !urlParts?.[3] &&  method === HttpMethod.GET) {
     const userId = url.split('/')[2]
     const user = Users.getUserById(userId)
     switch (user) {
@@ -31,7 +31,7 @@ export const handleRequest: RequestListener = (req, res)=> {
         res.end(JSON.stringify(user))
         break;
     } 
-  } else if(url?.startsWith('/users') &&  method === HttpMethod.POST) {
+  } else if (url?.startsWith('/users') && !urlParts?.[2] &&  method === HttpMethod.POST) {
     let body = '';
     let newUser: any;
 
@@ -57,7 +57,7 @@ export const handleRequest: RequestListener = (req, res)=> {
         res.end(JSON.stringify({message: ErrorMessages.BODY_INCORRECT}))
       }
     });
-  } else if(url?.startsWith('/users/') &&  method === HttpMethod.PUT) {
+  } else if(url?.startsWith('/users/') && !urlParts?.[3] &&  method === HttpMethod.PUT) {
     const userId = url.split('/')[2]
     let body = '';
     let updatedData: any;
@@ -91,7 +91,7 @@ export const handleRequest: RequestListener = (req, res)=> {
       }
     });
 
-  } else if(url?.startsWith('/users/') &&  method === HttpMethod.DELETE) {
+  } else if(url?.startsWith('/users/') && !urlParts?.[3] &&  method === HttpMethod.DELETE) {
     const userId = url.split('/')[2]
     const user = Users.deleteUser(userId)
     switch (user) {
@@ -108,6 +108,9 @@ export const handleRequest: RequestListener = (req, res)=> {
         res.end()
         break;
     } 
+  } else {
+    res.statusCode = 404
+    res.end(JSON.stringify({message: ErrorMessages.ENDPOINT_DOES_NOT_EXIST}))
   }
 }
 
