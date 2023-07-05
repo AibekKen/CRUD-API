@@ -1,9 +1,9 @@
 import { RequestListener } from 'http'
-import { Users } from '../db/users.js'
-import { HttpMethod } from '../constants/http-method.enum.js'
-import { ErrorMessages } from '../constants/error-messages.enum.js'
+import { Users } from '../db/users.ts'
+import { HttpMethod } from '../constants/http-method.enum.ts'
+import { ErrorMessages } from '../constants/error-messages.enum.ts'
 import { v4 as uuidv4 } from 'uuid';
-import { checkValidUser } from '../utils/utils.js';
+import { checkValidUser } from '../utils/utils.ts';
 
 export const handleRequest: RequestListener = (req, res)=> {
   try {

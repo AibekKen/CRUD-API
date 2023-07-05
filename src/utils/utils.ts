@@ -1,4 +1,4 @@
-import { Users } from '../db/users.js'
+import { Users } from '../db/users.ts'
 
 export const checkValidUser = (user: any) => {
   const requiredProps = [
@@ -16,7 +16,6 @@ export const checkValidUser = (user: any) => {
       } else if(typeof user[key] !== type) {
         return null
       }
-      console.log('type ok', key)
     } else {
       return null
     }
