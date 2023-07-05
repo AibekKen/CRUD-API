@@ -1,12 +1,11 @@
 import { Users } from '../db/users.ts'
+const requiredProps = [
+  ['username', 'string'], 
+  ['age', 'number'], 
+  ['hobbies', 'string']
+]
 
-export const checkValidUser = (user: any) => {
-  const requiredProps = [
-    ['username', 'string'], 
-    ['age', 'number'], 
-    ['hobbies', 'string']
-  ]
-    
+export const checkValidUser = (user: any) => {    
   for (const [key, type] of requiredProps) {
     if(!!user?.[key]) {
       if(key === 'hobbies') {
@@ -23,3 +22,21 @@ export const checkValidUser = (user: any) => {
   
   return user as Users
 }
+
+export const checkOnlyRequiredProps = (updatedData: any) => {
+  if (updatedData?.id) {
+    return null;
+  }
+  const entries = Object.entries(updatedData);
+
+  const result = entries.every(([key, value]) => {
+    if (key === "hobbies") {
+      return (Array.isArray(value) && !value.length) || (Array.isArray(value) && value.length && value.every((item: unknown) => typeof item === 'string'))
+    }
+    return requiredProps.some(([reqKey, reqType])=> {
+      return reqKey === key && typeof value === reqType
+    })
+  });
+  console.log(result)
+  return result ? updatedData as Partial<Users> : null
+};

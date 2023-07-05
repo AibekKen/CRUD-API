@@ -3,7 +3,7 @@ import { Users } from '../db/users.ts'
 import { HttpMethod } from '../constants/http-method.enum.ts'
 import { ErrorMessages } from '../constants/error-messages.enum.ts'
 import { v4 as uuidv4 } from 'uuid';
-import { checkValidUser } from '../utils/utils.ts';
+import { checkOnlyRequiredProps, checkValidUser } from '../utils/utils.ts';
 
 export const handleRequest: RequestListener = (req, res)=> {
   try {
@@ -70,21 +70,27 @@ export const handleRequest: RequestListener = (req, res)=> {
       req.on('end', () => {
         try {
           updatedData = JSON.parse(body);
-          const user = Users.getUserById(userId)
-          switch (user) {
-            case undefined:
-              res.statusCode = 404
-              res.end(JSON.stringify({ message: ErrorMessages.NOT_FOUND }))
-              break;
-            case null:
-              res.statusCode = 400
-              res.end(JSON.stringify({ message: ErrorMessages.INVALID_ID }))
-              break
-            default:
-              res.statusCode = 200
-              const updatedUser = Users.updateUser(userId, updatedData)
-              res.end(JSON.stringify(updatedUser))
-              break;
+          updatedData = checkOnlyRequiredProps(updatedData)
+          if (!updatedData) {
+            res.statusCode = 400
+            res.end(JSON.stringify({ message: ErrorMessages.BODY_REQ_FIELDS }))
+          } else {
+            const user = Users.getUserById(userId)
+            switch (user) {
+              case undefined:
+                res.statusCode = 404
+                res.end(JSON.stringify({ message: ErrorMessages.NOT_FOUND }))
+                break;
+              case null:
+                res.statusCode = 400
+                res.end(JSON.stringify({ message: ErrorMessages.INVALID_ID }))
+                break
+              default:
+                res.statusCode = 200
+                const updatedUser = Users.updateUser(userId, updatedData)
+                res.end(JSON.stringify(updatedUser))
+                break;
+            }
           }
         } catch {
           res.statusCode = 400
