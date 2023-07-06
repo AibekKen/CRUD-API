@@ -57,15 +57,16 @@ npm run test
 ```
 
 ## Available API
-### GET api/users is used to get all persons
-### GET api/users/{userId} is to get user by id
-### POST api/users is used to create record about new user and store it in database
-### PUT api/users/{userId} is used to update existing user
-### PUT api/users/{userId} is used to update existing user
-## Required props for create and updated user 
-type User = {
-  id: string;
-  username: string;
-  age: number;
-  hobbies: string[];
-};
+* GET api/users is used to get all persons
+* GET api/users/{userId} is to get user by id
+* POST api/users is used to create record about new user and store it in database
+* PUT api/users/{userId} is used to update existing user
+* PUT api/users/{userId} is used to update existing user
+
+## Required props for creating and updating user 
+<code>type User = {
+       id: string;
+       username: string;
+       age: number;
+       hobbies: string[];
+};</code>
