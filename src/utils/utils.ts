@@ -8,7 +8,10 @@ const requiredProps = [
 export const checkValidUser = (user: any) => {
   if (user?.id) {
     return undefined;
-  }    
+  } 
+  if(!checkOnlyRequiredProps(user)) {
+    return null
+  }   
   for (const [key, type] of requiredProps) {
     if(!!user?.[key]) {
       if(key === 'hobbies') {
