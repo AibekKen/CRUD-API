@@ -5,7 +5,10 @@ const requiredProps = [
   ['hobbies', 'string']
 ]
 
-export const checkValidUser = (user: any) => {    
+export const checkValidUser = (user: any) => {
+  if (user?.id) {
+    return undefined;
+  }    
   for (const [key, type] of requiredProps) {
     if(!!user?.[key]) {
       if(key === 'hobbies') {
@@ -37,6 +40,5 @@ export const checkOnlyRequiredProps = (updatedData: any) => {
       return reqKey === key && typeof value === reqType
     })
   });
-  console.log(result)
   return result ? updatedData as Partial<Users> : null
 };

@@ -1,7 +1,6 @@
-import { v4 as uuidv4, validate } from 'uuid';
-
+import cluster from 'cluster';
+import { validate } from 'uuid';
 export class Users {
-
   constructor(
     public username: string, 
     public age: number, 
@@ -9,34 +8,7 @@ export class Users {
     public id?: string,
   ){}
 
-  private static _users: Users[] = [
-    {
-      id: uuidv4(),
-      username: 'Gabe',
-      age: 12,
-      hobbies: ['basketball']
-    },
-    {
-      id: uuidv4(),
-      username: 'Make',
-      age: 18,
-      hobbies: ['hiking']
-    },
-    {
-      id: uuidv4(),
-      username: 'Edward',
-      age: 30,
-      hobbies: ['cars', 'football']
-    },
-    {
-      id: uuidv4(),
-      username: 'Gabriel',
-      age: 13,
-      hobbies: ['anime']
-    }
-  ]
-
-
+  private static _users: Users[] =  []
   static getUsers() {
     return this._users
   }
@@ -52,6 +24,9 @@ export class Users {
 
   static createUser(user: Users) {
     this._users.push(user)
+    if (cluster.isWorker) {
+      process.send && process.send(this._users)
+    }
   }
 
   static updateUser(id: string, updateUser: Partial<Users>) {
@@ -61,6 +36,9 @@ export class Users {
       this._users[index] = {
         ...this._users[index],
         ...updateUser
+      }
+      if (cluster.isWorker) {
+        process.send && process.send(this._users)
       }
       return this._users[index]
     }
@@ -72,8 +50,15 @@ export class Users {
     if (isValidUuid) {
       const user = this._users.find(user => user.id === id)
       this._users = this._users.filter((user) =>  user.id !== id)
+      if (cluster.isWorker) {
+        process.send && process.send(this._users)
+      }
       return user
     }
     return null
+  }
+
+  static setUsers(user: Users[]) {
+    this._users = user
   }
 }

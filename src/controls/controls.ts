@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { checkOnlyRequiredProps, checkValidUser } from '../utils/utils.ts';
 
 export const handleRequest: RequestListener = (req, res)=> {
+  console.log('request handled on port', process.env.PORT)
   try {
     const { url, method } = req
     res.setHeader('Content-type', 'application/json')
@@ -46,7 +47,7 @@ export const handleRequest: RequestListener = (req, res)=> {
           const user = checkValidUser(newUser)
           if (!user) {
             res.statusCode = 400
-            res.end(JSON.stringify({ message: ErrorMessages.BODY_REQ_FIELDS }))
+            res.end(JSON.stringify( { message: user === null ? ErrorMessages.BODY_REQ_FIELDS  : ErrorMessages.ID_ON_SERVER} ))
           } else {
             user.id = uuidv4()
             Users.createUser(user)

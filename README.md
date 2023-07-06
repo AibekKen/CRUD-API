@@ -44,6 +44,11 @@ To start the prod mode
 npm run start:prod
 ```
 
+To start the load balancer mode
+
+```bash
+npm run start:multi
+
 To start tests
 
 ```bash
