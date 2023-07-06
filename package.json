@@ -20,7 +20,7 @@
     "test": "jest --detectOpenHandles",
     "start:dev": "npx nodemon",
     "build": "npx tsc",
-    "start:prod": "npm run build && node build/main",
+    "start:prod": "ts-node ./src/main.ts",
     "start:multi": "ts-node ./src/primary.ts"
   },
   "repository": {
